@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SortingHatApp</string>
+    <string name="prompt_email">Введите ФИО</string>
+    <string name="action_sign_in">Показать результат</string>
+</resources>
