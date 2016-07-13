@@ -1,7 +1,7 @@
 height=200;
 bottomRadius=200;
 topRadius=150;
-width=2;
+width=1;
 hatField=400;
 
 module innerHat(){
