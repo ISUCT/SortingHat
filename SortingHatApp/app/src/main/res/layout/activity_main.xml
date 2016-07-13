@@ -15,7 +15,7 @@
 
 
     <LinearLayout
-        android:id="@+id/email_login_form"
+        android:id="@+id/FIO_enter_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -37,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/action_get_result"
+            android:onClick="showResult"
         />
     </LinearLayout>
 
