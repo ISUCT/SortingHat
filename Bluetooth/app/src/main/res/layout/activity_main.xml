@@ -1,53 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="top"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/img"
-    tools:context="cheerfulpeach.bluetooth.MainActivity"
-    android:gravity="top">
+    tools:context="cheerfulpeach.bluetooth.MainActivity">
+
+    <!--android:background="@drawable/img"-->
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Нажмите, чтобы установить соединение:"
-        android:id="@+id/textView"
-        android:textSize="25dp"
-        android:textColor="#092559"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
         android:layout_marginTop="40dp"
+        android:text="Нажмите, чтобы установить соединение:"
+        android:textColor="#092559"
+        android:textSize="25dp"
         android:textStyle="italic" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/btOn"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Жмяк"
-        android:id="@+id/button"
-        android:gravity="center"
-        android:layout_marginEnd="49dp"
-        android:layout_below="@+id/textView"
-        android:layout_alignEnd="@+id/textView"
-        android:textStyle="italic"
-        android:background="#00ffffff"
-        android:textColor="#092559" />
+        android:text="BT ON" />
+    <Button
+        android:id="@+id/btOff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BT OFF" />
+    <Button
+        android:id="@+id/btnAsClient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="As client" />
+    <Button
+        android:id="@+id/btnAsServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="As server" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/imageButton"
-        android:background="@drawable/star"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:text="Search devices" />
 
-    <ListView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listView"
-        android:layout_below="@+id/button"
-        android:layout_alignParentStart="true" />
-</RelativeLayout>
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/star" />
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
+
+</LinearLayout>
