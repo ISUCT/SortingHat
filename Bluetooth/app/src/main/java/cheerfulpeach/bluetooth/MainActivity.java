@@ -5,10 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.ParcelUuid;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.bluetooth.*;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     /* request BT discover */
     private static final int  REQUEST_DISCOVERABLE  = 0x2;
 
+    public final static String UUID = "d491d460-6ebd-11e6-bdf4-0800200c9a66";
 
     private BroadcastReceiver discoverDevicesReceiver;
     private BroadcastReceiver discoveryFinishedReceiver;
@@ -69,6 +73,16 @@ public class MainActivity extends AppCompatActivity {
                 return view;
             }
         };
+
+        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+                Toast.makeText(getApplicationContext(), discoveredDevices.get(i).getAddress(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         myListView.setAdapter(listAdapter);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void discoverDevices(View view) {
         discoveredDevices.clear();
+        getPairedDevices();
         listAdapter.notifyDataSetChanged();
         if (discoverDevicesReceiver == null) {
             discoverDevicesReceiver = new BroadcastReceiver() {
@@ -139,6 +154,15 @@ public class MainActivity extends AppCompatActivity {
         progressDialog = ProgressDialog.show(this, "Поиск устройств", "Подождите...");
 
         bluetoothAdapter.startDiscovery();
+    }
+
+    private void getPairedDevices(){
+        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+        if (pairedDevices.size() >0){
+            for(BluetoothDevice device: pairedDevices){
+                discoveredDevices.add(device);
+            }
+        }
     }
 
 }
