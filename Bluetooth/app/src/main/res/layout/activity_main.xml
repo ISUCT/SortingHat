@@ -13,22 +13,16 @@
 
     <!--android:background="@drawable/img"-->
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="40dp"
-        android:text="Нажмите, чтобы установить соединение:"
-        android:textColor="#092559"
-        android:textSize="25dp"
-        android:textStyle="italic" />
-
     <Button
         android:id="@+id/btOn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="BT ON" />
+    <Button
+        android:id="@+id/btDiscoverable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BT DISCOVERABLE" />
     <Button
         android:id="@+id/btOff"
         android:layout_width="match_parent"

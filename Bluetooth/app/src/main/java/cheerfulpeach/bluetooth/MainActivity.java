@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static android.bluetooth.BluetoothAdapter.*;
+
 public class MainActivity extends AppCompatActivity {
 
     private final static int REQUEST_ENABLE_BT = 1;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Button searchButton;
     private Button btnOn;
     private Button btnOff;
+    private Button btnDiscoverable;
     private Button btnAsServer;
     private Button btnAsClient;
 
@@ -55,13 +58,13 @@ public class MainActivity extends AppCompatActivity {
 
         ImageButton quitButton = (ImageButton) findViewById(R.id.imageButton);
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        bluetoothAdapter = getDefaultAdapter();
         searchButton = (Button) findViewById(R.id.btnSearch);
         btnOn = (Button)findViewById(R.id.btOn);
         btnOff = (Button)findViewById(R.id.btOff);
         btnAsClient = (Button)findViewById(R.id.btnAsClient);
         btnAsServer = (Button)findViewById(R.id.btnAsServer);
-
+        btnDiscoverable = (Button)  findViewById(R.id.btDiscoverable);
         myListView = (ListView)findViewById(R.id.listView);
 
         listAdapter = new ArrayAdapter<BluetoothDevice>(getBaseContext(), android.R.layout.simple_list_item_1, discoveredDevices) {
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         btnOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent enabler = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                Intent enabler = new Intent(ACTION_REQUEST_ENABLE);
                 startActivityForResult(enabler, REQUEST_ENABLE);
                 bluetoothAdapter.enable();
             }
@@ -105,6 +108,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 bluetoothAdapter.disable();
+            }
+        });
+
+        btnDiscoverable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ACTION_REQUEST_DISCOVERABLE);
+                i.putExtra(EXTRA_DISCOVERABLE_DURATION, 300);
+                startActivity(i);
             }
         });
 
@@ -147,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         registerReceiver(discoverDevicesReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-        registerReceiver(discoveryFinishedReceiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+        registerReceiver(discoveryFinishedReceiver, new IntentFilter(ACTION_DISCOVERY_FINISHED));
 
         myListView.setEnabled(false);
 
