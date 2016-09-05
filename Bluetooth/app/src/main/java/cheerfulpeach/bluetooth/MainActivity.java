@@ -5,9 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.ParcelUuid;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -50,6 +52,28 @@ public class MainActivity extends AppCompatActivity {
     private Button btnAsServer;
     private Button btnAsClient;
 
+    private ServerThread serverThread;
+    private ClientThread clientThread;
+
+
+
+    private final CommunicatorService communicatorService = new CommunicatorService() {
+        @Override
+        public Communicator createCommunicatorThread(BluetoothSocket socket) {
+            return new CommunicatorImpl(socket, new CommunicatorImpl.CommunicationListener() {
+                @Override
+                public void onMessage(final String message) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,9 +104,13 @@ public class MainActivity extends AppCompatActivity {
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-
                 Toast.makeText(getApplicationContext(), discoveredDevices.get(i).getAddress(), Toast.LENGTH_SHORT).show();
+                if (clientThread != null) {
+                    clientThread.cancel();
+                }
+                BluetoothDevice deviceSelected = discoveredDevices.get(i);
+                clientThread = new ClientThread(deviceSelected, communicatorService);
+                clientThread.start();
             }
         });
 
@@ -120,6 +148,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        btnAsServer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                serverThread = new ServerThread(communicatorService);
+                serverThread.start();
+            }
+        });
+
+        btnAsClient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clientThread != null) {
+                    new WriteTask().execute("Test");
+                } else {
+                    Toast.makeText(getApplicationContext(), "Сначала выберите клиента", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    private class WriteTask extends AsyncTask<String, Void, Void> {
+        protected Void doInBackground(String... args) {
+            try {
+                clientThread.getCommunicator().write(args[0]);
+            } catch (Exception e) {
+                Log.d("MainActivity", e.getClass().getSimpleName() + " " + e.getLocalizedMessage());
+            }
+            return null;
+        }
     }
 
     public void discoverDevices(View view) {
@@ -175,6 +234,34 @@ public class MainActivity extends AppCompatActivity {
                 discoveredDevices.add(device);
             }
         }
+    }
+
+
+
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        bluetoothAdapter.cancelDiscovery();
+
+        if (discoverDevicesReceiver != null) {
+            try {
+                unregisterReceiver(discoverDevicesReceiver);
+            } catch (Exception e) {
+                Log.d("MainActivity", "Не удалось отключить ресивер " + discoverDevicesReceiver);
+            }
+        }
+        if (clientThread != null) {
+            clientThread.cancel();
+        }
+        if (serverThread != null) serverThread.cancel();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
 }
