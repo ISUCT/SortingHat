@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
-import android.os.ParcelUuid;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btnDiscoverable;
     private Button btnAsServer;
     private Button btnAsClient;
+    private ImageButton imgBut;
+    private Button client;
 
     private ServerThread serverThread;
     private ClientThread clientThread;
@@ -90,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         btnAsServer = (Button)findViewById(R.id.btnAsServer);
         btnDiscoverable = (Button)  findViewById(R.id.btDiscoverable);
         myListView = (ListView)findViewById(R.id.listView);
+        imgBut = (ImageButton) findViewById(R.id.imageButton);
+        client = (Button) findViewById(R.id.client);
 
         listAdapter = new ArrayAdapter<BluetoothDevice>(getBaseContext(), android.R.layout.simple_list_item_1, discoveredDevices) {
             @Override
@@ -114,6 +117,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        client.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+//                Intent i = new Intent(MainActivity.this, Client.class);
+//                startActivity(i);
+            }
+        });
+
         myListView.setAdapter(listAdapter);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +134,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        imgBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         btnOn.setOnClickListener(new View.OnClickListener() {
             @Override
