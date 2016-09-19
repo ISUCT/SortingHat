@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/img"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    tools:context="isuct.sortinghat.Server">
+
+    <Button
+        android:id="@+id/btOn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#00ffffff"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Включить блютуз"
+        android:textColor="#f7f441"
+        android:textSize="34dp" />
+
+    <Button
+        android:id="@+id/btOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#00ffffff"
+        android:text="Выключить блютуз"
+        android:textColor="#f7f441"
+        android:textSize="34dp" />
+
+    <Button
+        android:id="@+id/btnAsClient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#00ffffff"
+        android:text="Как клиент"
+        android:textColor="#f7f441"
+        android:textSize="34dp" />
+
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#00ffffff"
+        android:text="Поиск устройств"
+        android:textColor="#f7f441"
+        android:textSize="34dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="right"
+        android:background="@drawable/star" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

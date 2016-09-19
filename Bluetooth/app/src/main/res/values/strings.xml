@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">Sorting hat</string>
-    <string name="prompt_math_mark">Введите балл</string>
-    <string name="prompt_language_mark">Введите балл</string>
-    <string name="prompt_science_mark">Введите балл</string>
-    <string name="prompt_chemestry_mark">Введите балл</string>
-</resources>
