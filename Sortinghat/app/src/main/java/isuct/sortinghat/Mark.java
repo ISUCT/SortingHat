@@ -7,7 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class Mark extends AppCompatActivity {
 
@@ -17,23 +21,43 @@ public class Mark extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mark);
 
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener (new View.OnClickListener() {
+        Button result = (Button) findViewById(R.id.result);
+
+        result.setOnClickListener (new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EditText lang = (EditText) findViewById(R.id.language);
+                EditText math = (EditText) findViewById(R.id.math);
+                EditText sci = (EditText) findViewById(R.id.science);
+                EditText chem = (EditText) findViewById(R.id.chemestry);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(Mark.this);
-                builder.setTitle("Результат")
-                        .setMessage("")
-                        .setCancelable(true)
-                        .setNegativeButton("ОК", new DialogInterface.OnClickListener() {
+                int langNum = Integer.parseInt(lang.getText().toString());
+                int mathNum = Integer.parseInt(math.getText().toString());
+                int sciNum = Integer.parseInt(sci.getText().toString());
+                int chemNum = Integer.parseInt(chem.getText().toString());
 
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
+                ArrayList<Integer> mark = new ArrayList<Integer>();
+                mark.add(langNum);
+                mark.add(mathNum);
+                mark.add(sciNum);
+                mark.add(chemNum);
+
+                Intent i = new Intent(Mark.this, Client.class);
+                i.putIntegerArrayListExtra("mark", mark);
+                startActivity(i);
+
+//                AlertDialog.Builder builder = new AlertDialog.Builder(Mark.this);
+//                builder.setTitle("Результат")
+//                        .setMessage("")
+//                        .setCancelable(true)
+//                        .setNegativeButton("ОК", new DialogInterface.OnClickListener() {
+//
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                dialog.cancel();
+//                            }
+//                        });
+//                AlertDialog alert = builder.create();
+//                alert.show();
             }
         });
 

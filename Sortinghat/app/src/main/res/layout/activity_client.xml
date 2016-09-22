@@ -21,6 +21,27 @@
         android:textSize="34dp" />
 
     <Button
+        android:id="@+id/btnDiscoverable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#00ffffff"
+        android:text="Сделать видимым"
+        android:textColor="#f7f441"
+        android:textSize="34dp" />
+
+    <Button
+        android:id="@+id/getRes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#00ffffff"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Получить результат"
+        android:textColor="#f7f441"
+        android:textSize="34dp" />
+
+    <Button
         android:id="@+id/btOff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -18,11 +18,11 @@ import static android.bluetooth.BluetoothAdapter.getDefaultAdapter;
 public class Server extends AppCompatActivity {
 
     public final static String UUID = "d491d460-6ebd-11e6-bdf4-0800200c9a66";
-    BluetoothAdapter bluetoothAdapter = getDefaultAdapter();
+    private BluetoothAdapter bluetoothAdapter = getDefaultAdapter();
     /* request BT enable */
-    static final int REQUEST_ENABLE = 0x1;
+    private static final int REQUEST_ENABLE = 0x1;
     /* request BT discover */
-    static final int REQUEST_DISCOVERABLE = 0x2;
+    private static final int REQUEST_DISCOVERABLE = 0x2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

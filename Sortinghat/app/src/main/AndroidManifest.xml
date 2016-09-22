@@ -11,7 +11,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,11 +22,24 @@
         </activity>
         <activity
             android:name=".Mark"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_client"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Player" />
-        <activity android:name=".Client" />
-        <activity android:name=".Server"></activity>
-    </application>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
+        <activity
+            android:name=".Player"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".Client"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".Server"
+            android:screenOrientation="portrait">
+        </activity>
+    </application>
 </manifest>

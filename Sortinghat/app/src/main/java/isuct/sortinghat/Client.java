@@ -13,37 +13,57 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import static android.bluetooth.BluetoothAdapter.ACTION_DISCOVERY_FINISHED;
 import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
-import static android.bluetooth.BluetoothAdapter.getDefaultAdapter;
+import static android.bluetooth.BluetoothAdapter.*;
 
 public class Client extends AppCompatActivity {
 
     public final static String UUID = "d491d460-6ebd-11e6-bdf4-0800200c9a66";
-    final static int REQUEST_ENABLE_BT = 1;
-    final List<BluetoothDevice> discoveredDevices = new ArrayList<BluetoothDevice>();
-    ArrayAdapter<BluetoothDevice> listAdapter;
-    ListView myListView;
-    BluetoothAdapter bluetoothAdapter = getDefaultAdapter();
+    private final static int REQUEST_ENABLE_BT = 1;
+    private final List<BluetoothDevice> discoveredDevices = new ArrayList<BluetoothDevice>();
+    private ArrayAdapter<BluetoothDevice> listAdapter;
+    private ListView myListView;
+    private BluetoothAdapter bluetoothAdapter = getDefaultAdapter();
     /* request BT enable */
-    static final int REQUEST_ENABLE = 0x1;
+    private static final int REQUEST_ENABLE = 0x1;
     /* request BT discover */
-    static final int REQUEST_DISCOVERABLE = 0x2;
+    private static final int REQUEST_DISCOVERABLE = 0x2;
 
-    BroadcastReceiver discoverDevicesReceiver;
-    BroadcastReceiver discoveryFinishedReceiver;
-    ProgressDialog progressDialog;
-    ClientThread clientThread;
+    private BroadcastReceiver discoverDevicesReceiver;
+    private BroadcastReceiver discoveryFinishedReceiver;
+    private ProgressDialog progressDialog;
+    private ClientThread clientThread;
+
+
+
+    public final CommunicatorService communicatorService = new CommunicatorService() {
+        @Override
+        public Communicator createCommunicatorThread(BluetoothSocket socket) {
+            return new CommunicatorImpl(socket, new CommunicatorImpl.CommunicationListener() {
+                @Override
+                public void onMessage(final String message) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +76,26 @@ public class Client extends AppCompatActivity {
         Button searchButton = (Button) findViewById(R.id.btnSearch);
         Button btnAsClient = (Button) findViewById(R.id.btnAsClient);
         ListView myListView = (ListView) findViewById(R.id.listView);
+        Button getRes = (Button) findViewById(R.id.getRes);
+        Button btnDiscoverable = (Button) findViewById(R.id.btnDiscoverable);
+
+        getRes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = getIntent();
+                ArrayList<Integer> mark = i.getIntegerArrayListExtra("mark");
+                System.out.println(mark);
+            }
+        });
+
+        btnDiscoverable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ACTION_REQUEST_DISCOVERABLE);
+                i.putExtra(EXTRA_DISCOVERABLE_DURATION, 300);
+                startActivity(i);
+            }
+        });
 
         imgBut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +119,16 @@ public class Client extends AppCompatActivity {
                 bluetoothAdapter.disable();
             }
         });
+
+        listAdapter = new ArrayAdapter<BluetoothDevice>(getBaseContext(), android.R.layout.simple_list_item_1, discoveredDevices) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                final BluetoothDevice device = getItem(position);
+                ((TextView) view.findViewById(android.R.id.text1)).setText(device.getName());
+                return view;
+            }
+        };
 
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -180,21 +230,26 @@ public class Client extends AppCompatActivity {
         }
     }
 
-    public final CommunicatorService communicatorService = new CommunicatorService() {
-        @Override
-        public Communicator createCommunicatorThread(BluetoothSocket socket) {
-            return new CommunicatorImpl(socket, new CommunicatorImpl.CommunicationListener() {
-                @Override
-                public void onMessage(final String message) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            });
+    @Override
+    public void onPause() {
+        super.onPause();
+        bluetoothAdapter.cancelDiscovery();
+
+        if (discoverDevicesReceiver != null) {
+            try {
+                unregisterReceiver(discoverDevicesReceiver);
+            } catch (Exception e) {
+                Log.d("MainActivity", "Не удалось отключить ресивер " + discoverDevicesReceiver);
+            }
         }
-    };
+        if (clientThread != null) {
+            clientThread.cancel();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }
 
