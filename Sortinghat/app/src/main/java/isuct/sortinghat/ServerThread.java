@@ -1,9 +1,5 @@
 package isuct.sortinghat;
 
-/**
- * Created by Анастасия on 19.09.2016.
- */
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
@@ -12,20 +8,16 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.UUID;
 
-/**
- * Created by jskonst on 05.09.16.
- */
 public class ServerThread extends Thread {
 
     private final BluetoothServerSocket bluetoothServerSocket;
     private final CommunicatorService communicatorService;
-
     public ServerThread(CommunicatorService communicatorService) {
         this.communicatorService = communicatorService;
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         BluetoothServerSocket tmp = null;
         try {
-            tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord("BluetoothApp", UUID.fromString(Server.UUID));
+            tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord("BluetoothApp", UUID.fromString(Client.UUID));
         } catch (IOException e) {
             Log.d("ServerThread", e.getLocalizedMessage());
         }
@@ -45,7 +37,7 @@ public class ServerThread extends Thread {
                 Log.d("ServerThread", "Stop: " + e.getLocalizedMessage());
                 break;
             }
-            if (socket != null) {
+            if (socket != null){
                 communicatorService.createCommunicatorThread(socket).startCommunication();
                 break;
 

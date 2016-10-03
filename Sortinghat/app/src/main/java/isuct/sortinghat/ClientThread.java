@@ -1,44 +1,33 @@
 package isuct.sortinghat;
 
-/**
- * Created by Анастасия on 19.09.2016.
- */
+import java.io.IOException;
+import java.util.UUID;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
-import java.io.IOException;
-import java.util.UUID;
-
-/**
- * Created by jskonst on 05.09.16.
- */
 public class ClientThread extends Thread {
-
-
-    private final BluetoothSocket mmSocket;
-    private final BluetoothDevice mmDevice;
-    private final CommunicatorService communicatorService;
 
     private volatile Communicator communicator;
 
+    private final BluetoothSocket socket;
+    private BluetoothAdapter bluetoothAdapter;
+    private final CommunicatorService communicatorService;
 
     public ClientThread(BluetoothDevice device, CommunicatorService communicatorService) {
-        // Use a temporary object that is later assigned to mmSocket,
-        // because mmSocket is final
-        this.communicatorService = communicatorService;
-        BluetoothSocket tmp = null;
-        mmDevice = device;
 
-        // Get a BluetoothSocket to connect with the given BluetoothDevice
+        this.communicatorService = communicatorService;
+
+        BluetoothSocket tmp = null;
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         try {
-            // MY_UUID is the app's UUID string, also used by the server code
-            tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(Server.UUID));
+            tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(Client.UUID));
         } catch (IOException e) {
             Log.d("ClientThread", e.getLocalizedMessage());
         }
-        mmSocket = tmp;
+        socket = tmp;
     }
 
     public synchronized Communicator getCommunicator() {
@@ -46,12 +35,13 @@ public class ClientThread extends Thread {
     }
 
     public void run() {
+        bluetoothAdapter.cancelDiscovery();
         try {
-            // Connect the device through the socket. This will block
-            // until it succeeds or throws an exception
-            mmSocket.connect();
+            Log.d("ClientThread", "About to connect");
+            socket.connect();
+            Log.d("ClientThread", "Connected");
             synchronized (this) {
-                communicator = communicatorService.createCommunicatorThread(mmSocket);
+                communicator = communicatorService.createCommunicatorThread(socket);
             }
             new Thread(new Runnable() {
                 @Override
@@ -61,25 +51,15 @@ public class ClientThread extends Thread {
                 }
             }).start();
         } catch (IOException connectException) {
-            // Unable to connect; close the socket and get out
             try {
-                mmSocket.close();
+                socket.close();
             } catch (IOException closeException) {
+                Log.d("ClientThread", closeException.getLocalizedMessage());
             }
-            return;
         }
-
-        // Do work to manage the connection (in a separate thread)
-//        manageConnectedSocket(mmSocket);
     }
 
-    /**
-     * Will cancel an in-progress connection, and close the socket
-     */
     public void cancel() {
-        try {
-            mmSocket.close();
-        } catch (IOException e) {
-        }
+        if (communicator != null) communicator.stopCommunication();
     }
 }

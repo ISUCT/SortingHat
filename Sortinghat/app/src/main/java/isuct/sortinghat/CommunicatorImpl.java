@@ -1,9 +1,5 @@
 package isuct.sortinghat;
 
-/**
- * Created by Анастасия on 19.09.2016.
- */
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

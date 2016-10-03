@@ -21,24 +21,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Mark"
+            android:name=".Client"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_client"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/title_activity_client">
         </activity>
 
         <activity
             android:name=".Player"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity
-            android:name=".Client"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity
-            android:name=".Server"
             android:screenOrientation="portrait">
         </activity>
     </application>
