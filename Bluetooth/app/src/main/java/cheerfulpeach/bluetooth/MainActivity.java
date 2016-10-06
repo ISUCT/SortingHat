@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,14 +14,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.bluetooth.*;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static android.bluetooth.BluetoothAdapter.*;
 
@@ -34,12 +36,14 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<BluetoothDevice> listAdapter;
     private ListView myListView;
     private BluetoothAdapter bluetoothAdapter;
-     /* request BT enable */
-    private static final int  REQUEST_ENABLE      = 0x1;
-    /* request BT discover */
-    private static final int  REQUEST_DISCOVERABLE  = 0x2;
 
-    public final static String UUID = "d491d460-6ebd-11e6-bdf4-0800200c9a66";
+    /* request BT enable */
+    private static final int REQUEST_ENABLE = 0x1;
+    /* request BT discover */
+    private static final int REQUEST_DISCOVERABLE = 0x2;
+
+    //public final static String SERVICE_UUID = "d491d460-6ebd-11e6-bdf4-0800200c9a66";
+
 
     private BroadcastReceiver discoverDevicesReceiver;
     private BroadcastReceiver discoveryFinishedReceiver;
@@ -47,51 +51,19 @@ public class MainActivity extends AppCompatActivity {
     private Button searchButton;
     private Button btnOn;
     private Button btnOff;
-    private Button btnDiscoverable;
-    private Button btnAsServer;
-    private Button btnAsClient;
-    private ImageButton imgBut;
     private Button client;
-
-    private ServerThread serverThread;
-    private ClientThread clientThread;
-
-
-
-    private final CommunicatorService communicatorService = new CommunicatorService() {
-        @Override
-        public Communicator createCommunicatorThread(BluetoothSocket socket) {
-            return new CommunicatorImpl(socket, new CommunicatorImpl.CommunicationListener() {
-                @Override
-                public void onMessage(final String message) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            });
-        }
-    };
+    private int clickNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        ImageButton quitButton = (ImageButton) findViewById(R.id.imageButton);
-
         bluetoothAdapter = getDefaultAdapter();
         searchButton = (Button) findViewById(R.id.btnSearch);
-        btnOn = (Button)findViewById(R.id.btOn);
-        btnOff = (Button)findViewById(R.id.btOff);
-        btnAsClient = (Button)findViewById(R.id.btnAsClient);
-        btnAsServer = (Button)findViewById(R.id.btnAsServer);
-        btnDiscoverable = (Button)  findViewById(R.id.btDiscoverable);
-        myListView = (ListView)findViewById(R.id.listView);
-        imgBut = (ImageButton) findViewById(R.id.imageButton);
+        btnOn = (Button) findViewById(R.id.btOn);
+        btnOff = (Button) findViewById(R.id.btOff);
+        myListView = (ListView) findViewById(R.id.listView);
         client = (Button) findViewById(R.id.client);
 
         listAdapter = new ArrayAdapter<BluetoothDevice>(getBaseContext(), android.R.layout.simple_list_item_1, discoveredDevices) {
@@ -108,23 +80,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(getApplicationContext(), discoveredDevices.get(i).getAddress(), Toast.LENGTH_SHORT).show();
-                if (clientThread != null) {
-                    clientThread.cancel();
-                }
-                BluetoothDevice deviceSelected = discoveredDevices.get(i);
-                clientThread = new ClientThread(deviceSelected, communicatorService);
-                clientThread.start();
+                String addr = discoveredDevices.get(i).getAddress();
+
+                Bundle bundle = new Bundle();
+                Intent intent = new Intent(getApplicationContext(), Client.class);
+                intent.putExtra("device", addr);
+                startActivity(intent);
+
             }
         });
 
-        client.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-//                Intent i = new Intent(MainActivity.this, Client.class);
-//                startActivity(i);
-            }
-        });
+//        client.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (clickNum == 1) {
+//                    clickNum = 0;
+//                    sendData(1);
+//                } else {
+//                    sendData(0);
+//                    clickNum += 1;
+//                }
+//            }
+//        });
 
         myListView.setAdapter(listAdapter);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -134,12 +111,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        imgBut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
         btnOn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,47 +128,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnDiscoverable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(ACTION_REQUEST_DISCOVERABLE);
-                i.putExtra(EXTRA_DISCOVERABLE_DURATION, 300);
-                startActivity(i);
-            }
-        });
-
-
-        btnAsServer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                serverThread = new ServerThread(communicatorService);
-                serverThread.start();
-            }
-        });
-
-        btnAsClient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (clientThread != null) {
-                    new WriteTask().execute("Test");
-                } else {
-                    Toast.makeText(getApplicationContext(), "Сначала выберите клиента", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
     }
 
-    private class WriteTask extends AsyncTask<String, Void, Void> {
-        protected Void doInBackground(String... args) {
-            try {
-                clientThread.getCommunicator().write(args[0]);
-            } catch (Exception e) {
-                Log.d("MainActivity", e.getClass().getSimpleName() + " " + e.getLocalizedMessage());
-            }
-            return null;
-        }
-    }
 
     public void discoverDevices(View view) {
         discoveredDevices.clear();
@@ -245,25 +177,20 @@ public class MainActivity extends AppCompatActivity {
         bluetoothAdapter.startDiscovery();
     }
 
-    private void getPairedDevices(){
+    private void getPairedDevices() {
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-        if (pairedDevices.size() >0){
-            for(BluetoothDevice device: pairedDevices){
+        if (pairedDevices.size() > 0) {
+            for (BluetoothDevice device : pairedDevices) {
                 discoveredDevices.add(device);
             }
         }
     }
 
 
-
-
-
-
     @Override
     public void onPause() {
         super.onPause();
         bluetoothAdapter.cancelDiscovery();
-
         if (discoverDevicesReceiver != null) {
             try {
                 unregisterReceiver(discoverDevicesReceiver);
@@ -271,15 +198,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("MainActivity", "Не удалось отключить ресивер " + discoverDevicesReceiver);
             }
         }
-        if (clientThread != null) {
-            clientThread.cancel();
-        }
-        if (serverThread != null) serverThread.cancel();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
     }
+
 
 }

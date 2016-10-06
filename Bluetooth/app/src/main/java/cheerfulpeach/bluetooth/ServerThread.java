@@ -20,7 +20,7 @@ public class ServerThread extends Thread {
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         BluetoothServerSocket tmp = null;
         try {
-            tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord("BluetoothApp", UUID.fromString(MainActivity.UUID));
+            tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord("BluetoothApp", UUID.fromString(Client.SERVICE_UUID));
         } catch (IOException e) {
             Log.d("ServerThread", e.getLocalizedMessage());
         }

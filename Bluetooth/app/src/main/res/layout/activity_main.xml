@@ -19,31 +19,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="BT ON" />
-    <Button
-        android:id="@+id/btDiscoverable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="BT DISCOVERABLE" />
+
     <Button
         android:id="@+id/btOff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="BT OFF" />
-    <Button
-        android:id="@+id/btnAsClient"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="As client" />
+
     <Button
         android:id="@+id/client"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Client" />
-    <Button
-        android:id="@+id/btnAsServer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="As server" />
 
     <Button
         android:id="@+id/btnSearch"
@@ -55,13 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/star" />
 
         <ListView
             android:id="@+id/listView"

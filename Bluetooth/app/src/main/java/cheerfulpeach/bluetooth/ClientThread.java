@@ -27,8 +27,8 @@ public class ClientThread extends Thread {
 
         // Get a BluetoothSocket to connect with the given BluetoothDevice
         try {
-            // MY_UUID is the app's UUID string, also used by the server code
-            tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(MainActivity.UUID));
+            // MY_UUID is the app's SERVICE_UUID string, also used by the server code
+            tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(Client.SERVICE_UUID));
         } catch (IOException e) {
             Log.d("ClientThread", e.getLocalizedMessage());
         }
