@@ -1,7 +1,26 @@
 <resources>
-    <string name="app_name">Sorting hat</string>
+    <string name="app_name">Akvelon hat</string>
     <string name="prompt_math_mark">Введите балл</string>
     <string name="prompt_language_mark">Введите балл</string>
     <string name="prompt_science_mark">Введите балл</string>
     <string name="prompt_chemestry_mark">Введите балл</string>
+
+    <string-array name="names">
+        <item>Шулайкин Дмитрий Алексеевич</item>
+        <item>Виноградова Дарья Сергеевна</item>
+        <item>Постнов Максим Дмитриевич</item>
+        <item>Рыжков Андрей Сергеевич</item>
+        <item>Масленников Андрей Ильич</item>
+        <item>Ежеменский Михаил Николаевич</item>
+        <item>Сосновиков Георгий Евгеньевич</item>
+        <item>Паламарчук Егор</item>
+        <item>Ершов Александр Алексеевич</item>
+        <item>Мельников Максим Андреевич</item>
+        <item>Богданов Алексей Анатольевич</item>
+        <item>Быков Никита Сергеевич</item>
+        <item>Карачев Артур Андреевич</item>
+        <item>Борисов Александр Дмитриевич</item>
+        <item>Кузьменко Мария Михайловна</item>
+        <item>Зонин Лев Михайлович</item>
+    </string-array>
 </resources>

@@ -10,7 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.IOException;
@@ -21,25 +25,27 @@ import static android.bluetooth.BluetoothAdapter.getDefaultAdapter;
 
 public class Client extends AppCompatActivity {
 
-    private ToggleButton tglMathBase;
-    private ToggleButton tglMathAdv;
-    private ToggleButton tglRussian;
-    private ToggleButton tglChem;
-    private ToggleButton tglPhysics;
-    private ToggleButton tglInformatics;
-    private ToggleButton tglObshestvo;
-    private ToggleButton tglHistory;
-    private ToggleButton tglOthers;
-    private Button result;
+//    private ToggleButton tglMathBase;
+//    private ToggleButton tglMathAdv;
+//    private ToggleButton tglRussian;
+//    private ToggleButton tglChem;
+//    private ToggleButton tglPhysics;
+//    private ToggleButton tglInformatics;
+//    private ToggleButton tglObshestvo;
+//    private ToggleButton tglHistory;
+//    private ToggleButton tglOthers;
+//    private Button result;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothSocket btSocket;
     private OutputStream outStream;
 
     public final static String SERVICE_UUID = "00001101-0000-1000-8000-00805F9B34FB";
-    int [] grpchem = {1,2,3,4};
-    int [] grpPhys = {6,7,8,9,10,11,12};
+    int [] passFace = {1,2,3};
+    int [] climateStation = {4,5,6};
     int [] grpInform = {13,14};
     int [] grpObsh = {15,16,17};
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +56,16 @@ public class Client extends AppCompatActivity {
 
         bluetoothAdapter = getDefaultAdapter();
 
-        tglMathBase = (ToggleButton)findViewById(R.id.tglMathBase);
-        tglMathAdv = (ToggleButton)findViewById(R.id.tglMathAdv);
-        tglRussian= (ToggleButton)findViewById(R.id.tglRussian);
-        tglChem= (ToggleButton)findViewById(R.id.tglChem);
-        tglPhysics= (ToggleButton)findViewById(R.id.tglPhysics);
-        tglInformatics= (ToggleButton)findViewById(R.id.tglInformatics);
-        tglObshestvo= (ToggleButton)findViewById(R.id.tglObshestvo);
-        tglHistory= (ToggleButton)findViewById(R.id.tglHistory);
-        tglOthers= (ToggleButton)findViewById(R.id.tglOthers);
-        result = (Button)findViewById(R.id.result);
+//        tglMathBase = (ToggleButton)findViewById(R.id.tglMathBase);
+//        tglMathAdv = (ToggleButton)findViewById(R.id.tglMathAdv);
+//        tglRussian= (ToggleButton)findViewById(R.id.tglRussian);
+//        tglChem= (ToggleButton)findViewById(R.id.tglChem);
+//        tglPhysics= (ToggleButton)findViewById(R.id.tglPhysics);
+//        tglInformatics= (ToggleButton)findViewById(R.id.tglInformatics);
+//        tglObshestvo= (ToggleButton)findViewById(R.id.tglObshestvo);
+//        tglHistory= (ToggleButton)findViewById(R.id.tglHistory);
+//        tglOthers= (ToggleButton)findViewById(R.id.tglOthers);
+//        result = (Button)findViewById(R.id.result);
 
         Intent intent = getIntent();
         String addr = intent.getStringExtra("device");
@@ -81,82 +87,65 @@ public class Client extends AppCompatActivity {
             }
         }
 
+        ListView lvMain = (ListView) findViewById(R.id.lvMain);
+        lvMain.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.names, android.R.layout.simple_list_item_multiple_choice);
 
+        lvMain.setAdapter(adapter);
 
-        tglMathAdv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (tglMathAdv.isChecked()){
-                    tglMathBase.setChecked(false);
-                }
-            }
-        });
-
-        tglMathBase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (tglMathBase.isChecked()){
-                    tglMathAdv.setChecked(false);
-                }
-            }
-        });
-
-        tglPhysics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (tglPhysics.isChecked()){
-                    tglChem.setChecked(false);
-                }
-            }
-        });
-
-
-        tglChem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (tglChem.isChecked()){
-                    tglPhysics.setChecked(false);
-                }
-            }
-        });
-
-        result.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (tglMathBase.isChecked()){
-                    sendData(0);
-                    return;
-                }
-                if(tglChem.isChecked()){
-                    int randi=(int) (Math.random()*grpchem.length);
-                    sendData(grpchem[randi]);
-                    return;
-                }
-                if(tglPhysics.isChecked()){
-                    int randi=(int) (Math.random()*grpPhys.length);
-                    sendData(grpPhys[randi]);
-                    return;
-                }
-
-                if(tglInformatics.isChecked()){
-                    int randi=(int) (Math.random()*grpInform.length);
-                    sendData(grpInform[randi]);
-                    return;
-                }
-                if(tglObshestvo.isChecked()){
-                    int randi=(int) (Math.random()*grpObsh.length);
-                    sendData(grpObsh[randi]);
-                    return;
-                }
-                if(tglHistory.isChecked()){
-                    //int randi=(int) (Math.random()*grpObsh.length);
-                    sendData(18);
-                    return;
+        lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+//                Log.d("LOGGING", "itemClick: position = " + position + ", id = "
+//                        + id);
+                if (position <8) { //PassFace
+                    int randi = (int) (Math.random()*passFace.length);
+                    sendData(passFace[randi]);
+                }else{
+                    int randi = (int) (Math.random()*climateStation.length);
+                    sendData(climateStation[randi]);
                 }
 
             }
         });
+//        result.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if (tglMathBase.isChecked()){
+//                    sendData(0);
+//                    return;
+//                }
+//                if(tglChem.isChecked()){
+//                    int randi=(int) (Math.random()*grpchem.length);
+//                    sendData(grpchem[randi]);
+//                    return;
+//                }
+//                if(tglPhysics.isChecked()){
+//                    int randi=(int) (Math.random()*grpPhys.length);
+//                    sendData(grpPhys[randi]);
+//                    return;
+//                }
+//
+//                if(tglInformatics.isChecked()){
+//                    int randi=(int) (Math.random()*grpInform.length);
+//                    sendData(grpInform[randi]);
+//                    return;
+//                }
+//                if(tglObshestvo.isChecked()){
+//                    int randi=(int) (Math.random()*grpObsh.length);
+//                    sendData(grpObsh[randi]);
+//                    return;
+//                }
+//                if(tglHistory.isChecked()){
+//                    //int randi=(int) (Math.random()*grpObsh.length);
+//                    sendData(18);
+//                    return;
+//                }
+//
+//            }
+//        });
     }
 
 

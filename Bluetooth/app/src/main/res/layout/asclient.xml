@@ -8,75 +8,13 @@
     android:orientation="vertical"
     android:background="@drawable/img"
     tools:context="cheerfulpeach.bluetooth.Client">
-
-    <ToggleButton
-        android:textOff="Математика базовая"
-        android:textOn="Математика базовая"
+<!--<ScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+    <ListView
+        android:id="@+id/lvMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tglMathBase" />
-
-    <ToggleButton
-        android:textOff="Математика профильная"
-        android:textOn="Математика профильная"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tglMathAdv"
-        android:checked="true" />
-
-    <ToggleButton
-        android:textOff="Русский"
-        android:textOn="Русский"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tglRussian"
-        android:checked="true"
-        />
-
-    <ToggleButton
-        android:textOff="Химия"
-        android:textOn="Химия"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tglChem"/>
-    <ToggleButton
-        android:textOff="Физика"
-        android:textOn="Физика"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tglPhysics"/>
-    <ToggleButton
-        android:textOff="Информатика"
-        android:textOn="Информатика"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tglInformatics"/>
-    <ToggleButton
-        android:textOff="Обществознание"
-        android:textOn="Обществознание"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tglObshestvo"/>
-    <ToggleButton
-        android:textOff="История"
-        android:textOn="История"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tglHistory"/>
-    <ToggleButton
-        android:textOff="Другие"
-        android:textOn="Другие"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tglOthers"/>
-
-    <Button
-        android:id="@+id/result"
-        style="?android:textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Результат"
-        android:textSize="15dp"
-        android:layout_gravity="center" />
+        android:layout_height="match_parent"></ListView>
+<!--</ScrollView>-->
 
 </LinearLayout>

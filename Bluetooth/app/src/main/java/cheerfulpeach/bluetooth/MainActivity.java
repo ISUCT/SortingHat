@@ -135,46 +135,46 @@ public class MainActivity extends AppCompatActivity {
         discoveredDevices.clear();
         getPairedDevices();
         listAdapter.notifyDataSetChanged();
-        if (discoverDevicesReceiver == null) {
-            discoverDevicesReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    String action = intent.getAction();
+//        if (discoverDevicesReceiver == null) {
+//            discoverDevicesReceiver = new BroadcastReceiver() {
+//                @Override
+//                public void onReceive(Context context, Intent intent) {
+//                    String action = intent.getAction();
+//
+//                    if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+//                        BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//
+//                        if (!discoveredDevices.contains(device)) {
+//                            discoveredDevices.add(device);
+//                            listAdapter.notifyDataSetChanged();
+//                        }
+//                    }
+//                }
+//            };
+//        }
 
-                    if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                        BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//        if (discoveryFinishedReceiver == null) {
+//            discoveryFinishedReceiver = new BroadcastReceiver() {
+//                @Override
+//                public void onReceive(Context context, Intent intent) {
+//                    myListView.setEnabled(true);
+//                    if (progressDialog != null)
+//                        progressDialog.dismiss();
+//                    Toast.makeText(getBaseContext(), "Поиск закончен. Выберите устройство для отправки  cообщения.", Toast.LENGTH_LONG).show();
+//                    unregisterReceiver(discoveryFinishedReceiver);
+//                    unregisterReceiver(discoverDevicesReceiver);
+//                }
+//            };
+//        }
 
-                        if (!discoveredDevices.contains(device)) {
-                            discoveredDevices.add(device);
-                            listAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            };
-        }
+//        registerReceiver(discoverDevicesReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+//        registerReceiver(discoveryFinishedReceiver, new IntentFilter(ACTION_DISCOVERY_FINISHED));
 
-        if (discoveryFinishedReceiver == null) {
-            discoveryFinishedReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    myListView.setEnabled(true);
-                    if (progressDialog != null)
-                        progressDialog.dismiss();
-                    Toast.makeText(getBaseContext(), "Поиск закончен. Выберите устройство для отправки  cообщения.", Toast.LENGTH_LONG).show();
-                    unregisterReceiver(discoveryFinishedReceiver);
-                    unregisterReceiver(discoverDevicesReceiver);
-                }
-            };
-        }
+//        myListView.setEnabled(false);
 
-        registerReceiver(discoverDevicesReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-        registerReceiver(discoveryFinishedReceiver, new IntentFilter(ACTION_DISCOVERY_FINISHED));
+//        progressDialog = ProgressDialog.show(this, "Поиск устройств", "Подождите...");
 
-        myListView.setEnabled(false);
-
-        progressDialog = ProgressDialog.show(this, "Поиск устройств", "Подождите...");
-
-        bluetoothAdapter.startDiscovery();
+//        bluetoothAdapter.startDiscovery();
     }
 
     private void getPairedDevices() {
