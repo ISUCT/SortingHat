@@ -28,7 +28,6 @@ public class Client extends AppCompatActivity {
     private ToggleButton tglPhysics;
     private ToggleButton tglInformatics;
     private ToggleButton tglObshestvo;
-    private ToggleButton tglHistory;
     private ToggleButton tglOthers;
     private Button result;
     private BluetoothAdapter bluetoothAdapter;
@@ -36,10 +35,10 @@ public class Client extends AppCompatActivity {
     private OutputStream outStream;
 
     public final static String SERVICE_UUID = "00001101-0000-1000-8000-00805F9B34FB";
-    int [] grpchem = {1,2,3,4};
-    int [] grpPhys = {6,7,8,9,10,11,12};
-    int [] grpInform = {13,14};
-    int [] grpObsh = {15,16,17};
+    int [] grpchem = {2,3,4,5,9,13,21,25,26,30,33};
+    int [] grpPhys = {8,10,11,12,14,29,31,32};
+    int [] grpInform = {15,16,22,23};
+    int [] grpObsh = {6,7,16,22};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,6 @@ public class Client extends AppCompatActivity {
         tglPhysics= (ToggleButton)findViewById(R.id.tglPhysics);
         tglInformatics= (ToggleButton)findViewById(R.id.tglInformatics);
         tglObshestvo= (ToggleButton)findViewById(R.id.tglObshestvo);
-        tglHistory= (ToggleButton)findViewById(R.id.tglHistory);
         tglOthers= (ToggleButton)findViewById(R.id.tglOthers);
         result = (Button)findViewById(R.id.result);
 
@@ -144,16 +142,12 @@ public class Client extends AppCompatActivity {
                     sendData(grpInform[randi]);
                     return;
                 }
-                if(tglObshestvo.isChecked()){
+                if(tglObshestvo.isChecked()||tglOthers.isChecked()){
                     int randi=(int) (Math.random()*grpObsh.length);
                     sendData(grpObsh[randi]);
                     return;
                 }
-                if(tglHistory.isChecked()){
-                    //int randi=(int) (Math.random()*grpObsh.length);
-                    sendData(18);
-                    return;
-                }
+
 
             }
         });

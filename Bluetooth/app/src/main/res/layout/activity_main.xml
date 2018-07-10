@@ -26,11 +26,11 @@
         android:layout_height="wrap_content"
         android:text="BT OFF" />
 
-    <Button
-        android:id="@+id/client"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Client" />
+    <!--<Button-->
+        <!--android:id="@+id/client"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Client" />-->
 
     <Button
         android:id="@+id/btnSearch"

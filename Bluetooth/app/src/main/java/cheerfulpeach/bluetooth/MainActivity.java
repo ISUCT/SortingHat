@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     private Button searchButton;
     private Button btnOn;
     private Button btnOff;
-    private Button client;
     private int clickNum;
 
     @Override
@@ -64,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         btnOn = (Button) findViewById(R.id.btOn);
         btnOff = (Button) findViewById(R.id.btOff);
         myListView = (ListView) findViewById(R.id.listView);
-        client = (Button) findViewById(R.id.client);
 
         listAdapter = new ArrayAdapter<BluetoothDevice>(getBaseContext(), android.R.layout.simple_list_item_1, discoveredDevices) {
             @Override
@@ -89,19 +87,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-//        client.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (clickNum == 1) {
-//                    clickNum = 0;
-//                    sendData(1);
-//                } else {
-//                    sendData(0);
-//                    clickNum += 1;
-//                }
-//            }
-//        });
 
         myListView.setAdapter(listAdapter);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -135,46 +120,46 @@ public class MainActivity extends AppCompatActivity {
         discoveredDevices.clear();
         getPairedDevices();
         listAdapter.notifyDataSetChanged();
-        if (discoverDevicesReceiver == null) {
-            discoverDevicesReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    String action = intent.getAction();
+//        if (discoverDevicesReceiver == null) {
+//            discoverDevicesReceiver = new BroadcastReceiver() {
+//                @Override
+//                public void onReceive(Context context, Intent intent) {
+//                    String action = intent.getAction();
+//
+//                    if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+//                        BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//
+//                        if (!discoveredDevices.contains(device)) {
+//                            discoveredDevices.add(device);
+//                            listAdapter.notifyDataSetChanged();
+//                        }
+//                    }
+//                }
+//            };
+//        }
+//
+//        if (discoveryFinishedReceiver == null) {
+//            discoveryFinishedReceiver = new BroadcastReceiver() {
+//                @Override
+//                public void onReceive(Context context, Intent intent) {
+//                    myListView.setEnabled(true);
+//                    if (progressDialog != null)
+//                        progressDialog.dismiss();
+//                    Toast.makeText(getBaseContext(), "Поиск закончен. Выберите устройство для отправки  cообщения.", Toast.LENGTH_LONG).show();
+//                    unregisterReceiver(discoveryFinishedReceiver);
+//                    unregisterReceiver(discoverDevicesReceiver);
+//                }
+//            };
+//        }
 
-                    if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                        BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-                        if (!discoveredDevices.contains(device)) {
-                            discoveredDevices.add(device);
-                            listAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            };
-        }
-
-        if (discoveryFinishedReceiver == null) {
-            discoveryFinishedReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    myListView.setEnabled(true);
-                    if (progressDialog != null)
-                        progressDialog.dismiss();
-                    Toast.makeText(getBaseContext(), "Поиск закончен. Выберите устройство для отправки  cообщения.", Toast.LENGTH_LONG).show();
-                    unregisterReceiver(discoveryFinishedReceiver);
-                    unregisterReceiver(discoverDevicesReceiver);
-                }
-            };
-        }
-
-        registerReceiver(discoverDevicesReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-        registerReceiver(discoveryFinishedReceiver, new IntentFilter(ACTION_DISCOVERY_FINISHED));
-
-        myListView.setEnabled(false);
-
-        progressDialog = ProgressDialog.show(this, "Поиск устройств", "Подождите...");
-
-        bluetoothAdapter.startDiscovery();
+//        registerReceiver(discoverDevicesReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+//        registerReceiver(discoveryFinishedReceiver, new IntentFilter(ACTION_DISCOVERY_FINISHED));
+//
+//        myListView.setEnabled(false);
+//
+//        progressDialog = ProgressDialog.show(this, "Поиск устройств", "Подождите...");
+//
+//        bluetoothAdapter.startDiscovery();
     }
 
     private void getPairedDevices() {
